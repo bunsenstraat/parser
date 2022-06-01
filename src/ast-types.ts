@@ -118,11 +118,16 @@ export const astNodeTypes = [
   'CatchClause',
   'FileLevelConstant',
   'AssemblyMemberAccess',
-  'TypeDefinition'
+  'TypeDefinition',
+  'InvalidNode'
 ] as const
 
 export type ASTNodeTypeString = typeof astNodeTypes[number]
-
+export interface InvalidNode extends BaseASTNode {
+  type: 'InvalidNode'
+  name?: string
+  value?: string
+}
 export interface PragmaDirective extends BaseASTNode {
   type: 'PragmaDirective'
   name: string
@@ -622,6 +627,7 @@ export type ASTNode =
   | CatchClause
   | FileLevelConstant
   | TypeDefinition
+  | InvalidNode
 
 export type AssemblyItem =
   | Identifier

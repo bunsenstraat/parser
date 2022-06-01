@@ -5,3 +5,5 @@ dist/
 .idea
 /Foo.sol
 coverage/
+.DS_Store
+yarn.lock

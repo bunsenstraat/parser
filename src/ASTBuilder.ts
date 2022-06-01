@@ -205,11 +205,21 @@ export class ASTBuilder
   }
 
   public visitStatement(ctx: SP.StatementContext) {
-    return this.visit(ctx.getChild(0)) as AST.Statement & WithMeta
+    try {
+      return this.visit(ctx.getChild(0)) as AST.Statement & WithMeta
+    } catch (e) {
+      const node: any = {type: 'InvalidNode'}
+      return this._addMeta(node, ctx)
+    }
   }
 
   public visitSimpleStatement(ctx: SP.SimpleStatementContext) {
-    return this.visit(ctx.getChild(0)) as AST.SimpleStatement & WithMeta
+    try {
+      return this.visit(ctx.getChild(0)) as AST.SimpleStatement & WithMeta
+    } catch (e) {
+      const node: any = {type: 'InvalidNode'}
+      return this._addMeta(node, ctx)
+    }
   }
 
   public visitEventDefinition(ctx: SP.EventDefinitionContext) {
@@ -943,7 +953,7 @@ export class ASTBuilder
     } else {
       throw new Error(
         'Expected MappingKey to have either ' +
-          'elementaryTypeName or userDefinedTypeName'
+        'elementaryTypeName or userDefinedTypeName'
       )
     }
   }
@@ -1794,16 +1804,16 @@ export class ASTBuilder
     const args =
       ctxAssemblyIdentifierList !== undefined
         ? ctxAssemblyIdentifierList
-            .identifier()
-            .map((x) => this.visitIdentifier(x))
+          .identifier()
+          .map((x) => this.visitIdentifier(x))
         : []
 
     const ctxAssemblyFunctionReturns = ctx.assemblyFunctionReturns()
     const returnArgs = ctxAssemblyFunctionReturns
       ? ctxAssemblyFunctionReturns
-          .assemblyIdentifierList()!
-          .identifier()
-          .map((x) => this.visitIdentifier(x))
+        .assemblyIdentifierList()!
+        .identifier()
+        .map((x) => this.visitIdentifier(x))
       : []
 
     const node: AST.AssemblyFunctionDefinition = {
